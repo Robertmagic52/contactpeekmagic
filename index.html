@@ -1,458 +1,123 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Contact Peek & Control Hub</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Peek Dashboard</title>
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.15); opacity: 0.4; }
-            100% { transform: scale(0.95); opacity: 0.8; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .pulse-active {
-            animation: pulse-ring 2s infinite ease-in-out;
+        .container {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #9ca3af;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card {
+            background-color: #111827;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid #374151;
+        }
+        .label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            word-break: break-word;
+        }
+        .phone-value {
+            font-size: 1.5rem;
+            color: #34d399;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #10b981;
+        }
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            color: #9ca3af;
+            margin-top: 16px;
         }
     </style>
 </head>
-<body class="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between antialiased selection:bg-indigo-500 selection:text-white">
+<body>
 
-    <header class="w-full border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md px-4 py-3 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-md mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2.5">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-md shadow-indigo-500/20">
-                    <i class="fa-solid fa-address-book text-white text-base"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-base tracking-tight text-white leading-tight">Contact Peek</h1>
-                    <p class="text-[10px] text-slate-400 font-mono">Mobile Control Hub</p>
-                </div>
-            </div>
-            <div class="flex items-center">
-                <span id="connection-status" class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-400 animate-pulse"></span> Connecting
-                </span>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-grow flex flex-col justify-start px-3 py-4 w-full max-w-md mx-auto space-y-4">
-
-        <!-- Contact Peek Receiver Display -->
-        <div class="glass-card rounded-2xl p-4 sm:p-5 text-slate-800 shadow-xl relative overflow-hidden transition-all duration-300">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                    <i class="fa-solid fa-id-card text-indigo-500"></i> Contact Peek
-                </span>
-                <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-50 text-indigo-600 border border-indigo-100">Live Sync</span>
-            </div>
-            
-            <!-- Received Data List -->
-            <div class="space-y-2.5">
-                <div class="bg-white/80 border border-slate-200/80 rounded-xl p-3 shadow-sm">
-                    <div class="flex items-center space-x-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-0.5">
-                        <i class="fa-solid fa-user text-indigo-500 text-xs"></i>
-                        <span>Contact Name</span>
-                    </div>
-                    <div id="contact-name-display" class="text-base font-bold text-slate-900 truncate">Waiting for contact...</div>
-                </div>
-                <div class="bg-white/80 border border-slate-200/80 rounded-xl p-3 shadow-sm">
-                    <div class="flex items-center space-x-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-0.5">
-                        <i class="fa-solid fa-phone text-emerald-500 text-xs"></i>
-                        <span>Phone Number</span>
-                    </div>
-                    <div id="contact-phone-display" class="text-base font-bold font-mono text-slate-900 truncate">Waiting for contact...</div>
-                </div>
-            </div>
-            
-            <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400 text-[10px] truncate max-w-[190px]">URL: ?name=X&phone=Y</span>
-                <button onclick="openTestModal()" class="text-indigo-600 font-bold hover:text-indigo-700 active:scale-95 transition-transform flex items-center gap-1 touch-manipulation">
-                    <i class="fa-solid fa-vial text-[10px]"></i> Test Send
-                </button>
-            </div>
-        </div>
-
-        <div class="glass-card rounded-2xl p-5 text-slate-800 shadow-xl relative overflow-hidden transition-all duration-300">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                    <i class="fa-solid fa-server text-indigo-500"></i> Backend Action Control
-                </span>
-                <div id="live-indicator-container" class="flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">
-                    <span id="status-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
-                    <span id="status-text-badge">LOADING</span>
-                </div>
-            </div>
-
-            <div class="text-center py-2 bg-slate-100/60 rounded-xl border border-slate-200/60 p-3">
-                <h2 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Action State Value</h2>
-                <div class="text-3xl font-black tracking-tight font-mono capitalize" id="action-value-display">
-                    ---
-                </div>
-            </div>
-
-            <!-- Mobile-Optimized Toggle Button -->
-            <div class="mt-4 flex flex-col items-center">
-                <button id="toggle-button" onclick="toggleAction()" disabled
-                    class="w-full py-4 px-6 rounded-xl font-bold text-base text-white shadow-md active:scale-95 transition-all duration-150 flex items-center justify-center space-x-2 bg-slate-300 cursor-not-allowed touch-manipulation">
-                    <i id="toggle-icon" class="fa-solid fa-spinner fa-spin text-lg"></i>
-                    <span id="toggle-button-text">Initializing...</span>
-                </button>
-                <p id="last-updated-text" class="text-[10px] text-slate-400 mt-2 text-center truncate w-full">Syncing state across sessions...</p>
-            </div>
-        </div>
-
-        <div class="glass-card rounded-2xl p-4 text-slate-800 shadow-xl">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-1.5">
-                    <i class="fa-solid fa-clock-rotate-left text-indigo-600 text-xs"></i>
-                    <h3 class="font-bold text-xs text-slate-800">Activity History</h3>
-                </div>
-                <button onclick="clearLogs()" class="text-[11px] text-slate-400 hover:text-slate-600 font-medium touch-manipulation">Clear</button>
-            </div>
-            <div id="log-container" class="space-y-1.5 max-h-36 overflow-y-auto pr-1 text-[11px]">
-                <div class="text-slate-400 text-center py-3 italic text-xs">Waiting for updates...</div>
-            </div>
-        </div>
-
-    </main>
-
-    <footer class="w-full py-3 px-4 text-center text-[10px] text-slate-500 border-t border-slate-900 bg-slate-950">
-        Contact Peek & Control Hub &bull; Mobile View
-    </footer>
-
-    <!-- Notification Modal -->
-    <div id="notification-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl p-5 max-w-xs w-full shadow-2xl text-slate-800 text-center">
-            <div id="modal-icon" class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-3 text-lg">
-                <i class="fa-solid fa-info"></i>
-            </div>
-            <h3 id="modal-title" class="font-bold text-base mb-1">Notification</h3>
-            <p id="modal-message" class="text-xs text-slate-600 mb-4">Message content goes here.</p>
-            <button onclick="closeModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition-colors touch-manipulation">OK</button>
-        </div>
-    </div>
-
-    <!-- Simulation Modal for testing contact send -->
-    <div id="simulation-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl p-5 max-w-xs w-full shadow-2xl text-slate-800">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="font-bold text-sm text-slate-800">Simulate Shortcut Contact</h3>
-                <button onclick="closeTestModal()" class="text-slate-400 hover:text-slate-600 p-1 touch-manipulation"><i class="fa-solid fa-xmark text-base"></i></button>
-            </div>
-            <p class="text-[11px] text-slate-500 mb-3">Simulate mobile shortcut payload sent to backend.</p>
-            <div class="space-y-3 mb-4">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Contact Name</label>
-                    <input type="text" id="sim-name" value="Jane Doe" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Phone Number</label>
-                    <input type="text" id="sim-phone" value="+1 (555) 987-6543" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-            </div>
-            <button onclick="submitSimulatedContact()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition-colors touch-manipulation">Send to Backend</button>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'contact-peek-app-id';
+    <div class="container">
+        <h1>Contact Peek</h1>
         
-        // Replace with your Firebase credentials when hosting on StackBlitz / GitHub
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyC2bImgJEFsveC-qq3yPeHBmk_40_2xL0g",
-  authDomain: "contactpeek.firebaseapp.com",
-  projectId: "contactpeek",
-  storageBucket: "contactpeek.firebasestorage.app",
-  messagingSenderId: "145117208462",
-  appId: "1:145117208462:web:10b8fefee5b3df52d08edf",
-  measurementId: "G-X2LNER5TB2"
-        };
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        <div class="card">
+            <div class="label">Received Name</div>
+            <div id="name-display" class="value">Waiting for input...</div>
+        </div>
 
-        let app, db, auth;
-        let currentActionState = 'stop';
-        let currentName = 'No Name Received';
-        let currentPhone = 'No Phone Received';
-        let isInitialized = false;
-        let logs = [];
+        <div class="card">
+            <div class="label">Received Phone</div>
+            <div id="phone-display" class="value phone-value">—</div>
+        </div>
 
-        const connectionStatus = document.getElementById('connection-status');
-        const actionValueDisplay = document.getElementById('action-value-display');
-        const contactNameDisplay = document.getElementById('contact-name-display');
-        const contactPhoneDisplay = document.getElementById('contact-phone-display');
-        const statusDot = document.getElementById('status-dot');
-        const statusTextBadge = document.getElementById('status-text-badge');
-        const liveIndicatorContainer = document.getElementById('live-indicator-container');
-        const toggleButton = document.getElementById('toggle-button');
-        const toggleButtonText = document.getElementById('toggle-button-text');
-        const toggleIcon = document.getElementById('toggle-icon');
-        const lastUpdatedText = document.getElementById('last-updated-text');
-        const logContainer = document.getElementById('log-container');
+        <div class="status-container">
+            <span class="status-indicator"></span>
+            <span>Live Sync Active</span>
+        </div>
+    </div>
 
-        window.showModal = function(title, message, isError = false) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = message;
-            const iconEl = document.getElementById('modal-icon');
-            if (isError) {
-                iconEl.className = "w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4 text-xl";
-                iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-            } else {
-                iconEl.className = "w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-4 text-xl";
-                iconEl.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
-            }
-            document.getElementById('notification-modal').classList.remove('hidden');
-            document.getElementById('notification-modal').classList.add('flex');
-        }
-
-        window.closeModal = function() {
-            document.getElementById('notification-modal').classList.remove('flex');
-            document.getElementById('notification-modal').classList.add('hidden');
-        }
-
-        window.clearLogs = function() {
-            logs = [];
-            renderLogs();
-        }
-
-        window.openTestModal = function() {
-            document.getElementById('simulation-modal').classList.remove('hidden');
-            document.getElementById('simulation-modal').classList.add('flex');
-        }
-
-        window.closeTestModal = function() {
-            document.getElementById('simulation-modal').classList.remove('flex');
-            document.getElementById('simulation-modal').classList.add('hidden');
-        }
-
-        window.submitSimulatedContact = async function() {
-            const nameVal = document.getElementById('sim-name').value.trim();
-            const phoneVal = document.getElementById('sim-phone').value.trim();
-            closeTestModal();
-            await updateContactBackend(nameVal, phoneVal, currentActionState);
-        }
-
-        function addLog(action, name, phone, user, time) {
-            logs.unshift({ action, name, phone, user: user.substring(0, 8) + '...', time: new Date(time).toLocaleTimeString() });
-            if (logs.length > 20) logs.pop();
-            renderLogs();
-        }
-
-        function renderLogs() {
-            if (logs.length === 0) {
-                logContainer.innerHTML = '<div class="text-slate-400 text-center py-3 italic text-xs">No recent activity.</div>';
-                return;
-            }
-            logContainer.innerHTML = logs.map(l => `
-                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <div class="flex items-center space-x-1.5 truncate">
-                        <span class="w-1.5 h-1.5 rounded-full flex-shrink-0 ${l.action === 'start' ? 'bg-emerald-500' : 'bg-slate-400'}"></span>
-                        <span class="font-semibold text-slate-700 truncate text-[11px]">${l.name}</span>
-                        <span class="text-slate-400 text-[9px] flex-shrink-0">(${l.action})</span>
-                    </div>
-                    <span class="text-slate-400 font-mono text-[9px] flex-shrink-0 ml-1">${l.time}</span>
-                </div>
-            `).join('');
-        }
-
-        async function initFirebase() {
+    <script>
+        async function pollContact() {
             try {
-                if (!firebaseConfig || firebaseConfig.apiKey === "YOUR_FIREBASE_API_KEY") {
-                    throw new Error("Firebase configuration required.");
-                }
-
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        connectionStatus.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-                        connectionStatus.innerHTML = '<span class="w-2 h-2 mr-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Connected';
-                        setupStateListener(user.uid);
-                    } else {
-                        connectionStatus.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20";
-                        connectionStatus.innerHTML = '<span class="w-2 h-2 mr-1.5 rounded-full bg-red-400"></span> Disconnected';
-                    }
-                });
-
-            } catch (error) {
-                console.warn("Running in local simulation mode.", error);
-                connectionStatus.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20";
-                connectionStatus.innerHTML = '<span class="w-2 h-2 mr-1.5 rounded-full bg-amber-400"></span> Local Mode';
-                initLocalState();
-            }
-        }
-
-        async function setupStateListener(userId) {
-            // Firestore 4-segment path rule: artifacts/{appId}/data/control_state
-            const stateDocRef = doc(db, 'artifacts', appId, 'data', 'control_state');
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const qName = urlParams.get('name');
-            const qPhone = urlParams.get('phone') || urlParams.get('phoneNumber');
-
-            if (qName || qPhone) {
-                try {
-                    await setDoc(stateDocRef, {
-                        action: currentActionState,
-                        name: qName || 'Unknown Name',
-                        phoneNumber: qPhone || 'Unknown Number',
-                        updatedBy: userId,
-                        timestamp: Date.now()
-                    }, { merge: true });
-                } catch (e) {
-                    console.error("Error setting query params:", e);
-                }
-            }
-
-            onSnapshot(stateDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    updateUIState(data.action || 'stop', data.name || 'No Name Received', data.phoneNumber || 'No Phone Received', data.updatedBy || 'System', data.timestamp || Date.now());
-                } else {
-                    const initialState = { action: 'stop', name: 'No Name Received', phoneNumber: 'No Phone Received', updatedBy: userId, timestamp: Date.now() };
-                    setDoc(stateDocRef, initialState).catch(err => console.error("Error initializing doc:", err));
-                }
-            }, (error) => {
-                console.error("Firestore error:", error);
-                showModal("Connection Notice", "Real-time sync error. Operating in offline mode.", true);
-            });
-        }
-
-        function initLocalState() {
-            isInitialized = true;
-            const urlParams = new URLSearchParams(window.location.search);
-            const qName = urlParams.get('name');
-            const qPhone = urlParams.get('phone') || urlParams.get('phoneNumber');
-            updateUIState('stop', qName || 'Local Contact', qPhone || '+1 (555) 0199', 'Local User', Date.now());
-        }
-
-        function updateUIState(action, name, phoneNumber, user, timestamp) {
-            currentActionState = action;
-            currentName = name;
-            currentPhone = phoneNumber;
-            isInitialized = true;
-
-            actionValueDisplay.textContent = action;
-            contactNameDisplay.textContent = name;
-            contactPhoneDisplay.textContent = phoneNumber;
-            
-            if (action === 'start') {
-                actionValueDisplay.className = "text-3xl font-black tracking-tight font-mono text-emerald-600";
-                statusDot.className = "w-2 h-2 rounded-full bg-emerald-500";
-                statusTextBadge.textContent = "RUNNING";
-                liveIndicatorContainer.className = "flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 pulse-active";
+                const response = await fetch('/api/contact');
+                if (!response.ok) return;
                 
-                toggleButton.className = "w-full py-4 px-6 rounded-xl font-bold text-base text-white shadow-md active:scale-95 transition-all duration-150 flex items-center justify-center space-x-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 shadow-red-600/20 cursor-pointer touch-manipulation";
-                toggleButtonText.textContent = "Stop System";
-                toggleIcon.className = "fa-solid fa-stop text-lg";
-            } else {
-                actionValueDisplay.className = "text-3xl font-black tracking-tight font-mono text-slate-700";
-                statusDot.className = "w-2 h-2 rounded-full bg-slate-400";
-                statusTextBadge.textContent = "STOPPED";
-                liveIndicatorContainer.className = "flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200";
+                const data = await response.json();
                 
-                toggleButton.className = "w-full py-4 px-6 rounded-xl font-bold text-base text-white shadow-md active:scale-95 transition-all duration-150 flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-emerald-600/20 cursor-pointer touch-manipulation";
-                toggleButtonText.textContent = "Start System";
-                toggleIcon.className = "fa-solid fa-play text-lg";
-            }
-
-            toggleButton.disabled = false;
-            lastUpdatedText.textContent = `Updated: ${new Date(timestamp).toLocaleTimeString()}`;
-            addLog(action, name, phoneNumber, user, timestamp);
-        }
-
-        async function updateContactBackend(name, phoneNumber, action) {
-            const userId = auth?.currentUser?.uid || 'anonymous-user';
-            const timestamp = Date.now();
-            try {
-                if (db && auth?.currentUser) {
-                    const stateDocRef = doc(db, 'artifacts', appId, 'data', 'control_state');
-                    await setDoc(stateDocRef, {
-                        action: action,
-                        name: name,
-                        phoneNumber: phoneNumber,
-                        updatedBy: userId,
-                        timestamp: timestamp
-                    }, { merge: true });
-                } else {
-                    updateUIState(action, name, phoneNumber, userId, timestamp);
-                }
-            } catch (error) {
-                console.error("Error updating contact backend:", error);
-                showModal("Error", "Failed to update contact state.", true);
+                document.getElementById('name-display').innerText = data.name || "No Name Received";
+                document.getElementById('phone-display').innerText = data.phone || "No Phone Received";
+            } catch (err) {
+                console.error("Polling sync error:", err);
             }
         }
 
-        window.toggleAction = async function() {
-            if (!isInitialized) return;
-
-            const newAction = currentActionState === 'start' ? 'stop' : 'start';
-            const userId = auth?.currentUser?.uid || 'anonymous-user';
-            const timestamp = Date.now();
-
-            toggleButton.disabled = true;
-            toggleIcon.className = "fa-solid fa-spinner fa-spin text-xl";
-
-            try {
-                if (db && auth?.currentUser) {
-                    const stateDocRef = doc(db, 'artifacts', appId, 'data', 'control_state');
-                    await setDoc(stateDocRef, {
-                        action: newAction,
-                        name: currentName,
-                        phoneNumber: currentPhone,
-                        updatedBy: userId,
-                        timestamp: timestamp
-                    }, { merge: true });
-                } else {
-                    updateUIState(newAction, currentName, currentPhone, userId, timestamp);
-                }
-            } catch (error) {
-                console.error("Error updating state:", error);
-                showModal("Error", "Failed to update backend state.", true);
-                toggleButton.disabled = false;
-            }
-        }
-
-        window.onload = function() {
-            initFirebase();
-        }
+        // Poll every 1 second for near-instant peek updates
+        setInterval(pollContact, 1000);
+        pollContact(); // Immediate initial fetch
     </script>
 </body>
 </html>
