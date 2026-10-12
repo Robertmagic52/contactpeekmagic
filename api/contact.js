@@ -1,29 +1,34 @@
-import { kv } from '@vercel/kv';
+// Simple in-memory storage (no database needed)
+let latestContact = {
+    name: "Waiting for input...",
+    phone: "",
+    action: "stop"
+};
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
+    // Allow your frontend and shortcuts to talk to it
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') return res.status(200).end();
-
-    try {
-        if (req.method === 'POST' || (req.method === 'GET' && (req.query.name || req.query.action))) {
-            const data = req.method === 'POST' ? req.body : req.query;
-            const payload = {
-                name: data.name || "No Name Received",
-                phone: data.phone || "No Phone Received",
-                action: data.action || "start",
-                timestamp: Date.now()
-            };
-            await kv.set('latest_contact', payload);
-            return res.status(200).json({ success: true, payload });
-        }
-
-        // Default GET request fetches current state for the frontend
-        const current = await kv.get('latest_contact') || { name: "Waiting for input...", phone: "", action: "stop" };
-        return res.status(200).json(current);
-    } catch (error) {
-        return res.status(500).json({ error: error.message });
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
     }
+
+    // If your phone shortcut sends data (via POST or URL parameters)
+    if (req.method === 'POST' || req.query.name || req.query.phone) {
+        const data = req.method === 'POST' ? req.body : req.query;
+        
+        latestContact = {
+            name: data.name || latestContact.name,
+            phone: data.phone || latestContact.phone,
+            action: data.action || latestContact.action,
+            timestamp: Date.now()
+        };
+        
+        return res.status(200).json({ success: true, contact: latestContact });
+    }
+
+    // Default: Send the latest contact to your website dashboard
+    return res.status(200).json(latestContact);
 }
