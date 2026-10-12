@@ -150,8 +150,10 @@
             try {
                 const payload = { action: actionState };
                 
-                // When Stop is pressed, explicitly set name to Stopped
-                if (actionState === 'stop') {
+                if (actionState === 'start') {
+                    payload.name = 'Waiting for input...';
+                    payload.phone = '—';
+                } else if (actionState === 'stop') {
                     payload.name = 'Stopped';
                     payload.phone = '—';
                 }
