@@ -150,9 +150,9 @@
             try {
                 const payload = { action: actionState };
                 
-                // Only clear the display when Stop is clicked
+                // When Stop is pressed, explicitly set name to Stopped
                 if (actionState === 'stop') {
-                    payload.name = 'Waiting for input...';
+                    payload.name = 'Stopped';
                     payload.phone = '—';
                 }
 
@@ -168,4 +168,9 @@
             }
         }
 
-        // Poll
+        // Poll every 1 second for instant peek updates
+        setInterval(pollContact, 1000);
+        pollContact(); // Initial fetch
+    </script>
+</body>
+</html>
